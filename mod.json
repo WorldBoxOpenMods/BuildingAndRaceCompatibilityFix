@@ -1,0 +1,8 @@
+{
+    "name": "BuildingAndRaceCompatibilityFix",
+    "author": "Keymasterer",
+    "version": "1.0.0",
+    "description": "Something something people who add buildings can't figure out how to make it work with modded races Ig.",
+    "iconPath": "icon.png",
+    "targetGameBuild": 558
+}
