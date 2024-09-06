@@ -7,6 +7,7 @@ NML_MODS_FOLDER_PATH=~/Library/Application\ Support/Steam/steamapps/common/world
 cd "$NML_MODS_FOLDER_PATH" || exit
 rm "./BuildingAndRaceCompatibilityFix.zip"
 rm -rf "./BuildingAndRaceCompatibilityFix"
+rm -rf "./KEYMASTERER_BUILDINGANDRACECOMPATIBILITYFIX" # mod folder that NML auto generates if BuildingAndRaceCompatibilityFix.zip is unzipped by it
 mkdir "./BuildingAndRaceCompatibilityFix"
 
 # Copy built files into distributable folder
