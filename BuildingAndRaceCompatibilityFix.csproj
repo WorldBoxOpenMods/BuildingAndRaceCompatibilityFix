@@ -65,4 +65,7 @@
     <Target Name="AfterBuild">
     </Target>
     -->
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="sh ./assemble_mod_distributable.sh" Condition=" '$(OS)' == 'UNIX' " />
+    </Target>
 </Project>
