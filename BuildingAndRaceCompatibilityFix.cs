@@ -24,7 +24,7 @@ namespace BuildingAndRaceCompatibilityFix {
     }
 
     private static Exception CityBehBuild_canUseBuildAsset_Finalizer(Exception __exception, ref bool __result) {
-      if (__exception is KeyNotFoundException) {
+      if (__exception is KeyNotFoundException || __exception is NullReferenceException) {
         __result = false;
         return null;
       }
