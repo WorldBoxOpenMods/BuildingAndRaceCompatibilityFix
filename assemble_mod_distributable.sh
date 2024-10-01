@@ -23,6 +23,7 @@ cp -R "./GameResources" "$NML_MODS_FOLDER_PATH/BuildingAndRaceCompatibilityFix/"
 cp -R "./Locales" "$NML_MODS_FOLDER_PATH/BuildingAndRaceCompatibilityFix/"
 cp "./icon.png" "$NML_MODS_FOLDER_PATH/BuildingAndRaceCompatibilityFix/icon.png"
 cp -R "./mod.json" "$NML_MODS_FOLDER_PATH/BuildingAndRaceCompatibilityFix/mod.json"
+cp -R "./OutdatedNml.cs" "$NML_MODS_FOLDER_PATH/BuildingAndRaceCompatibilityFix/OutdatedNml.cs"
 
 # Compress distributable folder into zip file
 cd "$NML_MODS_FOLDER_PATH" || exit
