@@ -60,9 +60,8 @@ namespace BuildingAndRaceCompatibilityFix {
                        return mod.GetType();
                    }
                  }).Where(modType => modType != null).Select(modType => modType.Module).SelectMany(modModule => modModule.GetTypes())) {
-          LogInfo($"Checking {type.FullName} for aggressive getBuildingAsset() log patches...");
           foreach (MethodInfo method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic).Where(method => method.Name == "getBuildingAsset_Prefix")) {
-            LogInfo($"Found {type.FullName}.{method.Name}!");
+            LogInfo($"Patching {type.FullName}.{method.Name} to remove debug logs.");
             try {
               Harmony harmony = new Harmony($"key.worldbox.{type.Name}.auto_patch");
               harmony.Patch(
