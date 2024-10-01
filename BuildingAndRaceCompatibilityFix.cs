@@ -6,12 +6,14 @@ using System.Reflection;
 using System.Reflection.Emit;
 using ai.behaviours;
 using HarmonyLib;
+using NCMS;
 using NeoModLoader.api;
+using UnityEngine;
 
 namespace BuildingAndRaceCompatibilityFix {
   [SuppressMessage("ReSharper", "InconsistentNaming")]
   public class BuildingAndRaceCompatibilityFix : BasicMod<BuildingAndRaceCompatibilityFix> {
-    private static byte _initCounter = 0;
+    private static byte _initCounter;
     protected override void OnModLoad() {
       LogInfo("BuildingAndRaceCompatibilityFix loading...");
       try {
@@ -29,7 +31,35 @@ namespace BuildingAndRaceCompatibilityFix {
 
     private void Update() {
       if (_initCounter == 4) {
-        foreach (Type type in NeoModLoader.WorldBoxMod.LoadedMods.Select(mod => mod.GetType()).Select(modType => modType.Module).SelectMany(modModule => modModule.GetTypes())) {
+        foreach (Type type in NeoModLoader.WorldBoxMod.LoadedMods.Select(mod => {
+                   switch (mod) {
+                     case AttachedModComponent ncmsMod:
+                       foreach (MonoBehaviour component in ncmsMod.gameObject.GetComponents<MonoBehaviour>()) {
+                         try {
+                           if (HasModEntryAttribute(component)) {
+                             return component.GetType();
+                           }
+                         } catch (Exception e) {
+                           if (e is TypeLoadException) continue;
+                           LogError($"Failed to check {component.GetType().FullName} for ModEntry attribute!");
+                           LogError(e.ToString());
+                         }
+                       }
+                       return null;
+                     case VirtualMod virtualMod:
+                       GameObject bepinexManager = GameObject.Find("BepInEx_Manager");
+                       if (bepinexManager == null) {
+                         return null;
+                       }
+                       Component[] bepinexComponents = bepinexManager.GetComponents(typeof(Component));
+                       foreach (Component component in bepinexComponents.Where(component => (component.GetType().FullName ?? "").Contains(virtualMod.GetDeclaration().Name)).Where(component => IsBaseUnityPluginDerivative(component as MonoBehaviour))) {
+                         return component.GetType();
+                       }
+                       return null;
+                     default:
+                       return mod.GetType();
+                   }
+                 }).Where(modType => modType != null).Select(modType => modType.Module).SelectMany(modModule => modModule.GetTypes())) {
           LogInfo($"Checking {type.FullName} for aggressive getBuildingAsset() log patches...");
           foreach (MethodInfo method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic).Where(method => method.Name == "getBuildingAsset_Prefix")) {
             LogInfo($"Found {type.FullName}.{method.Name}!");
@@ -48,6 +78,21 @@ namespace BuildingAndRaceCompatibilityFix {
       } else if (_initCounter < 4) _initCounter++;
     }
 
+    private static bool HasModEntryAttribute(MonoBehaviour component) {
+#pragma warning disable CS0618 // Type or member is obsolete
+      return Attribute.GetCustomAttribute(component.GetType(), typeof(ModEntry)) != null;
+#pragma warning restore CS0618 // Type or member is obsolete
+    }
+
+    private static bool IsBaseUnityPluginDerivative(MonoBehaviour component) {
+      Type type = component.GetType();
+      while (type != null) {
+        if (type.Name == "BaseUnityPlugin") return true;
+        type = type.BaseType;
+      }
+      return false;
+    }
+
     private static Exception CityBehBuild_canUseBuildAsset_Finalizer(Exception __exception, ref bool __result) {
       if (__exception is KeyNotFoundException || __exception is NullReferenceException) {
         __result = false;
@@ -55,7 +100,7 @@ namespace BuildingAndRaceCompatibilityFix {
       }
       return __exception;
     }
-    
+
     private static IEnumerable<CodeInstruction> RemoveLoggingFromMethod(IEnumerable<CodeInstruction> instructions) {
       foreach (CodeInstruction instruction in instructions) {
         if (instruction.opcode == OpCodes.Call && instruction.operand is MethodInfo methodInfo && methodInfo.Name == "Log") {
