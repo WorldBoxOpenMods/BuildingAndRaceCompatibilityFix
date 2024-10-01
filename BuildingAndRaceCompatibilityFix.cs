@@ -29,7 +29,7 @@ namespace BuildingAndRaceCompatibilityFix {
 
     private void Update() {
       if (_initCounter == 4) {
-        foreach (Type type in NeoModLoader.WorldBoxMod.LoadedMods.Select(mod => mod.GetType()).Select(modType => modType.Assembly).SelectMany(modAssembly => modAssembly.GetTypes())) {
+        foreach (Type type in NeoModLoader.WorldBoxMod.LoadedMods.Select(mod => mod.GetType()).Select(modType => modType.Module).SelectMany(modModule => modModule.GetTypes())) {
           LogInfo($"Checking {type.FullName} for aggressive getBuildingAsset() log patches...");
           foreach (MethodInfo method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic).Where(method => method.Name == "getBuildingAsset_Prefix")) {
             LogInfo($"Found {type.FullName}.{method.Name}!");
