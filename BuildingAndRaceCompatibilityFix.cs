@@ -75,7 +75,8 @@ namespace BuildingAndRaceCompatibilityFix {
             }
           }
         }
-      } else if (_initCounter < 4) _initCounter++;
+      }
+      if (_initCounter++ <= 4) { }
     }
 
     private static bool HasModEntryAttribute(MonoBehaviour component) {
