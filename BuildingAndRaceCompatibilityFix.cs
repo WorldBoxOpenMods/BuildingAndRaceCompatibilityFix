@@ -79,8 +79,9 @@ namespace BuildingAndRaceCompatibilityFix {
     }
 
     private static bool HasModEntryAttribute(MonoBehaviour component) {
-      #pragma warning disable once CS0618 // Type or member is obsolete
+      #pragma warning disable CS0618 // Type or member is obsolete
       return Attribute.GetCustomAttribute(component.GetType(), typeof(ModEntry)) != null;
+      #pragma warning restore CS0618 // Type or member is obsolete
     }
 
     private static bool IsBaseUnityPluginDerivative(MonoBehaviour component) {
