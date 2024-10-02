@@ -51,8 +51,8 @@ namespace BuildingAndRaceCompatibilityFix {
                        if (bepinexManager == null) {
                          return null;
                        }
-                       Component[] bepinexComponents = bepinexManager.GetComponents(typeof(Component));
-                       foreach (Component component in bepinexComponents.Where(component => (component.GetType().FullName ?? "").Contains(virtualMod.GetDeclaration().Name)).Where(component => IsBaseUnityPluginDerivative(component as MonoBehaviour))) {
+                       MonoBehaviour[] bepinexComponents = bepinexManager.GetComponents<MonoBehaviour>();
+                       foreach (MonoBehaviour component in bepinexComponents.Where(component => (component.GetType().FullName ?? "").Contains(virtualMod.GetDeclaration().Name))) {
                          return component.GetType();
                        }
                        return null;
@@ -82,15 +82,6 @@ namespace BuildingAndRaceCompatibilityFix {
       #pragma warning disable CS0618 // Type or member is obsolete
       return Attribute.GetCustomAttribute(component.GetType(), typeof(ModEntry)) != null;
       #pragma warning restore CS0618 // Type or member is obsolete
-    }
-
-    private static bool IsBaseUnityPluginDerivative(MonoBehaviour component) {
-      Type type = component.GetType();
-      while (type != null) {
-        if (type.Name == "BaseUnityPlugin") return true;
-        type = type.BaseType;
-      }
-      return false;
     }
 
     private static Exception CityBehBuild_canUseBuildAsset_Finalizer(Exception __exception, ref bool __result) {
