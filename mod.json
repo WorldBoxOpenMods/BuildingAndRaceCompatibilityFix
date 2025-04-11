@@ -1,8 +1,8 @@
 {
-    "name": "BuildingAndRaceCompatibilityFix",
-    "author": "Keymasterer",
-    "version": "1.1.0",
-    "description": "Something something modders who add buildings in their mods can't figure out how to make it work with modded races and also don't know how to not do spam logs that lag the game into oblivion and back Ig, gotta love being the one to have to clean after poor content mod coding. IwI",
-    "iconPath": "icon.png",
-    "targetGameBuild": 558
+  "name": "BuildingAndRaceCompatibilityFix",
+  "author": "Keymasterer",
+  "version": "1.1.0",
+  "description": "Something something modders who add buildings in their mods can't figure out how to make it work with modded races and also don't know how to not do spam logs that lag the game into oblivion and back Ig, gotta love being the one to have to clean after poor content mod coding. IwI",
+  "iconPath": "icon.png",
+  "targetGameBuild": 558
 }
